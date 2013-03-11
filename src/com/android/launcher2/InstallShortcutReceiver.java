@@ -17,6 +17,7 @@
 package com.android.launcher2;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,6 +44,11 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
     private static final int INSTALL_SHORTCUT_SUCCESSFUL = 0;
     private static final int INSTALL_SHORTCUT_IS_DUPLICATE = -1;
     private static final int INSTALL_SHORTCUT_NO_SPACE = -2;
+
+    private static final String ACTION_INSTALL_SHORTCUT_SUCCESSFUL =
+            "com.android.launcher.action.INSTALL_SHORTCUT_SUCCESSFUL";
+    private static final String EXTRA_RESPONSE_PACKAGENAME = "response_packagename";
+    private static final String EXTRA_SHORTCUT_PACKAGENAME = "shortcut_packagename";
 
     // A mime-type representing shortcut data
     public static final String SHORTCUT_MIMETYPE =
@@ -156,6 +162,13 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
                 Toast.makeText(context, context.getString(R.string.shortcut_duplicate, name),
                         Toast.LENGTH_SHORT).show();
             }
+        } else {
+            // When the shortcut put successful, broadcast an intent with package name
+            // So the application can use it to show a toast.
+            String packageName = intent.getStringExtra(EXTRA_SHORTCUT_PACKAGENAME);
+            Intent responseIntent = new Intent(ACTION_INSTALL_SHORTCUT_SUCCESSFUL);
+            responseIntent.putExtra(EXTRA_RESPONSE_PACKAGENAME, packageName);
+            context.sendBroadcast(responseIntent);
         }
     }
 
