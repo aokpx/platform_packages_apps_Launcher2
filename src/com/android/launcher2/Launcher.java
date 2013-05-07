@@ -1,6 +1,10 @@
 
 /*
  * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (c) 2013, The Linux Foundation. All rights reserved.
+ *
+ * Not a Contribution. Apache license notifications and license are retained
+ * for attribution purposes only.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1850,6 +1854,11 @@ public final class Launcher extends Activity
         final Intent pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
         Intent chooser = Intent.createChooser(pickWallpaper,
                 getText(R.string.chooser_wallpaper));
+        // Use the resource name instead of the title text for locale reason.
+        // Now the title of ChooseActivity can be translated when locale change.
+        String packageName = this.getComponentName().getPackageName();
+        String titleResoureName = packageName + ":string/chooser_wallpaper";
+        chooser.putExtra(Intent.EXTRA_TITLE, titleResoureName);
         // NOTE: Adds a configure option to the chooser if the wallpaper supports it
         //       Removed in Eclair MR1
 //        WallpaperManager wm = (WallpaperManager)
